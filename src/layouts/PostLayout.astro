@@ -1,4 +1,4 @@
-and ---
+---
 import { render } from 'astro:content';
 import Base from './Base.astro';
 import Icon from '../components/Icon.astro';
@@ -121,6 +121,48 @@ const category = categoryOf(post);
   </article>
 </Base>
 
+<script>
+  // Highlight the table-of-contents entry for the section currently being read.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
+  const sections = links
+    .map((a) => document.getElementById(decodeURIComponent(a.getAttribute('href')!.slice(1))))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (sections.length > 0) {
+    const offset = 120; // a heading counts as "current" once it scrolls past the sticky header
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      let current: HTMLElement | undefined;
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top - offset > 0) break;
+        current = section;
+      }
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom) current = sections[sections.length - 1];
+
+      for (const a of links) {
+        const active = current !== undefined && a.getAttribute('href') === `#${current.id}`;
+        a.classList.toggle('active', active);
+        if (active) a.setAttribute('aria-current', 'location');
+        else a.removeAttribute('aria-current');
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+</script>
+
 <style>
   .post-head {
     max-width: 760px;
@@ -173,12 +215,25 @@ const category = categoryOf(post);
   }
   .toc li a {
     display: block;
-    padding: 4px 0 4px 14px;
+    padding: 5px 0 5px 14px;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
     color: var(--text-muted);
+    line-height: 1.4;
+    transition:
+      color 0.2s,
+      border-color 0.2s,
+      background-color 0.2s;
   }
   .toc li a:hover {
     color: var(--accent);
     text-decoration: none;
+  }
+  .toc li a.active {
+    color: var(--accent);
+    font-weight: 600;
+    border-left-color: var(--accent);
+    background: linear-gradient(90deg, var(--accent-soft), transparent);
   }
   .gh-actions {
     margin-top: 56px;
