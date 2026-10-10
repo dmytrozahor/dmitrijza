@@ -5,10 +5,10 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
 // SITE and BASE are injected by the GitHub Pages workflow (actions/configure-pages).
-// Locally they fall back to the project-page URL: https://dmytrozahor.github.io/dmitrijza
+// Locally they fall back to the custom domain: https://dmytrozah.dev
 export default defineConfig({
-  site: process.env.SITE ?? 'https://dmytrozahor.github.io',
-  base: process.env.BASE ?? '/dmitrijza',
+  site: process.env.SITE ?? 'https://dmytrozah.dev',
+  base: process.env.BASE ?? '',
   integrations: [sitemap()],
   devToolbar: { enabled: false },
   markdown: {
