@@ -1,0 +1,72 @@
+---
+import Icon from './Icon.astro';
+import type { Project } from '../site.config';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<a class:list={['card', 'project', { featured: project.featured }]} href={project.href}>
+  <div class="top">
+    <Icon name="github" size={22} />
+    {project.featured && <span class="badge">featured</span>}
+  </div>
+  <h3>{project.name}</h3>
+  <p>{project.description}</p>
+  <ul class="tags">
+    {project.tags.map((t) => <li class="tag">{t}</li>)}
+  </ul>
+  <span class="go">
+    View on GitHub <Icon name="arrow" size={16} />
+  </span>
+</a>
+
+<style>
+  .project {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+  }
+  h3 {
+    margin: 8px 0 0;
+    font-size: 1.25rem;
+  }
+  p {
+    margin: 0 0 10px;
+    color: var(--text-muted);
+    flex: 1;
+  }
+  .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: #fff;
+    background: var(--grad);
+    padding: 2px 10px;
+    border-radius: 999px;
+  }
+  .featured {
+    border-color: var(--border-strong);
+    background:
+      radial-gradient(400px 200px at 100% 0%, rgba(145, 71, 255, 0.22), transparent 70%),
+      var(--bg-card);
+  }
+</style>

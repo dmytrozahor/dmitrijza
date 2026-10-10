@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import Socials from '../components/Socials.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../site.config';
+import { url } from '../lib/posts';
+
+const fides = site.projects.find((p) => p.name === 'Fides');
+---
+
+<Base title="About" description={`About ${site.name}, ${site.role} at ${site.company.name}.`}>
+  <div class="container about">
+    <div class="photo-wrap">
+      <img src={url(site.portrait || site.avatar)} alt={`Photo of ${site.name}`} class="photo" />
+    </div>
+    <div class="prose">
+      <h1 class="page-title">Hi, I'm <span class="grad-text">{site.name.split(' ')[0]}</span></h1>
+      <p class="lead">
+        I'm a {site.role} at <a href={site.company.url}>{site.company.name}</a>, based in {site.location}.
+      </p>
+      <p>
+        I work across the whole stack, from Java and Spring backends down to the JVM and up to the frontend. At
+        {site.company.name}, one of Germany's largest energy companies, I build software where reliability matters. I also
+        have a soft spot for mathematics, so expect some of it here.
+      </p>
+      <p>
+        Besides my work at {site.company.name}, I am building my own project,
+        {fides && <a href={fides.href}>Fides</a>}: a robust real property management and trading platform.
+      </p>
+      <p>
+        On this site I publish long-form <a href={url('/articles/')}>articles</a> and shorter
+        <a href={url('/blog/')}>blog posts</a>. Everything is written in Markdown and lives in a
+        <a href={`https://github.com/${site.repo.owner}/${site.repo.name}`}>public GitHub repository</a>.
+      </p>
+      <p class="loc meta"><Icon name="pin" size={16} /> {site.location}</p>
+      <Socials />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+    padding-top: 24px;
+  }
+  .photo-wrap {
+    margin-top: 56px;
+    padding: 6px;
+    border-radius: 28px;
+    background: var(--grad);
+    box-shadow: var(--shadow);
+  }
+  .photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 22px;
+  }
+  .lead {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+  }
+  .loc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  @media (max-width: 760px) {
+    .about {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .photo-wrap {
+      max-width: 240px;
+    }
+  }
+</style>

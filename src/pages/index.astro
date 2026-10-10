@@ -1,0 +1,426 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Socials from '../components/Socials.astro';
+import PostCard from '../components/PostCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { categories, categoryKeys, site, type Category } from '../site.config';
+import { categoryUrl, formatDate, getPosts, postUrl, url } from '../lib/posts';
+
+const allArticles = await getPosts('articles');
+const articles = allArticles.slice(0, 3);
+const articleCount = (key: Category) =>
+  allArticles.filter((p) => p.collection === 'articles' && p.data.category === key).length;
+const blog = (await getPosts('blog')).slice(0, 4);
+const fides = site.projects.find((p) => p.name === 'Fides')!;
+---
+
+<Base>
+  <div class="container">
+    <!-- hero -->
+    <section class="hero">
+      <div class="banner" style={site.banner ? `background-image:url('${url(site.banner)}')` : undefined}>
+        {!site.banner && <div class="banner-art" aria-hidden="true" />}
+      </div>
+      <div class="hero-body">
+        <img class="avatar" src={url(site.avatar)} alt={`Photo of ${site.name}`} width="148" height="148" />
+        <div class="intro">
+          <h1>{site.name}</h1>
+          <p class="role">
+            {site.role} at
+            <a href={site.company.url} class="company"><span class="enbw-dot" aria-hidden="true" />{site.company.name}</a>
+          </p>
+          <p class="tagline">{site.tagline}</p>
+          <p class="meta loc"><Icon name="pin" size={14} /> {site.location}</p>
+        </div>
+      </div>
+      <div class="hero-socials"><Socials /></div>
+    </section>
+
+    <!-- featured -->
+    <section class="section">
+      <h2 class="section-label">// featured</h2>
+      <div class="featured">
+        <a class="card feat feat-main" href={fides.href}>
+          <span class="feat-icon"><Icon name="github" size={26} /></span>
+          <span class="meta">my project · github</span>
+          <h3>Fides</h3>
+          <p>{fides.description}</p>
+          <span class="go">Fides on GitHub <Icon name="external" size={16} /></span>
+        </a>
+        <a class="card feat" href={url('/articles/')}>
+          <span class="feat-icon"><Icon name="book" size={24} /></span>
+          <span class="meta">long-form</span>
+          <h3>Read the articles</h3>
+          <p>Long-form writing on mathematics, programming and beyond.</p>
+          <span class="go">All articles <Icon name="arrow" size={16} /></span>
+        </a>
+        <a class="card feat" href={url('/blog/')}>
+          <span class="feat-icon"><Icon name="pen" size={24} /></span>
+          <span class="meta">notes</span>
+          <h3>Read the blog</h3>
+          <p>Shorter notes, learnings and project updates.</p>
+          <span class="go">All posts <Icon name="arrow" size={16} /></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- topics -->
+    <section class="section">
+      <h2 class="section-label">// topics</h2>
+      <div class="topics">
+        {
+          categoryKeys.map((key) => (
+            <a class="card topic" href={categoryUrl(key)}>
+              <span class="feat-icon">
+                <Icon name={categories[key].icon} size={22} />
+              </span>
+              <div>
+                <h3>{categories[key].title}</h3>
+                <p>{categories[key].description}</p>
+                <span class="meta">
+                  {articleCount(key)} {articleCount(key) === 1 ? 'article' : 'articles'} →
+                </span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- work -->
+    <section class="section">
+      <h2 class="section-label">// work</h2>
+      <a class="card work" href={site.company.url}>
+        <div class="work-logo" aria-hidden="true">EnBW</div>
+        <div>
+          <p class="meta">currently</p>
+          <h3>{site.role} @ {site.company.name}</h3>
+          <p>
+            EnBW Energie Baden-Württemberg AG is one of Germany's largest energy companies. I build software that
+            supports the energy transition.
+          </p>
+        </div>
+        <Icon name="external" size={18} />
+      </a>
+    </section>
+
+    <!-- articles -->
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-label">// latest articles</h2>
+      </div>
+      <div class="grid">
+        {articles.map((post) => <PostCard post={post} />)}
+      </div>
+      <p class="all"><a class="more-link" href={url('/articles/')}>all articles →</a></p>
+    </section>
+
+    <!-- blog -->
+    <section class="section">
+      <h2 class="section-label">// from the blog</h2>
+      <ul class="blog-list">
+        {
+          blog.map((post) => (
+            <li>
+              <a href={postUrl(post)}>
+                <time class="meta" datetime={post.data.date.toISOString()}>
+                  {formatDate(post.data.date)}
+                </time>
+                <span class="title">{post.data.title}</span>
+                <span class="arrow">
+                  <Icon name="arrow" size={16} />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="all"><a class="more-link" href={url('/blog/')}>all blog posts →</a></p>
+    </section>
+
+    <!-- projects -->
+    <section class="section">
+      <h2 class="section-label">// projects</h2>
+      <div class="grid">
+        {site.projects.slice(0, 3).map((p) => <ProjectCard project={p} />)}
+      </div>
+      <p class="all"><a class="more-link" href={url('/projects/')}>all projects →</a></p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hero {
+    margin-top: 28px;
+    position: relative;
+  }
+  .banner {
+    height: clamp(160px, 26vw, 260px);
+    border-radius: var(--radius-lg);
+    background-size: cover;
+    background-position: center;
+    background-color: var(--bg-elev);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border);
+  }
+  .banner-art {
+    position: absolute;
+    inset: 0;
+    background: var(--banner);
+  }
+  .banner-art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--banner-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--banner-grid) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: linear-gradient(180deg, #000 10%, transparent 95%);
+  }
+  .hero-body {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+    padding-inline: 28px;
+    margin-top: -64px;
+    position: relative;
+    flex-wrap: wrap;
+  }
+  .avatar {
+    width: 148px;
+    height: 148px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--bg);
+    box-shadow:
+      0 0 0 2px var(--accent-strong),
+      var(--shadow);
+    background: var(--bg-card);
+  }
+  .intro {
+    flex: 1;
+    min-width: min(100%, 260px);
+    padding-top: 84px;
+  }
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 0 0 8px;
+  }
+  .role {
+    font-size: 1.2rem;
+    margin: 0 0 8px;
+    color: var(--text-muted);
+  }
+  .company {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: var(--text);
+    padding: 1px 10px 1px 8px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    border: 1px solid var(--border-strong);
+  }
+  .company:hover {
+    text-decoration: none;
+    border-color: var(--accent);
+  }
+  .enbw-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--grad);
+  }
+  .tagline {
+    margin: 0 0 6px;
+    max-width: 60ch;
+  }
+  .loc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+  }
+  .hero-socials {
+    padding: 22px 28px 0;
+  }
+
+  .featured {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 18px;
+  }
+  .feat {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .feat h3 {
+    margin: 4px 0 4px;
+    font-size: 1.35rem;
+  }
+  .feat p {
+    color: var(--text-muted);
+    margin: 0 0 14px;
+    flex: 1;
+  }
+  .feat-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .feat-main {
+    background: var(--grad);
+    border-color: transparent;
+    color: #fff;
+  }
+  .feat-main .meta,
+  .feat-main p {
+    color: rgba(255, 255, 255, 0.82);
+  }
+  .feat-main .feat-icon {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+  }
+  .feat-main .go {
+    color: #fff;
+  }
+  .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.95rem;
+  }
+
+  .topics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 18px;
+  }
+  .topic {
+    display: flex;
+    gap: 18px;
+    padding: 22px;
+  }
+  .topic .feat-icon {
+    flex-shrink: 0;
+    margin: 0;
+  }
+  .topic h3 {
+    margin: 0 0 4px;
+    font-size: 1.2rem;
+  }
+  .topic p {
+    margin: 0 0 10px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .work {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 22px;
+    align-items: center;
+    padding: 22px 26px;
+    color: var(--text-muted);
+  }
+  .work h3 {
+    margin: 0 0 4px;
+    color: var(--text);
+    font-size: 1.2rem;
+  }
+  .work p {
+    margin: 0;
+  }
+  .work-logo {
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 18px;
+    background: var(--grad);
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .blog-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+  }
+  .blog-list a {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .blog-list a:hover {
+    text-decoration: none;
+    background: var(--accent-soft);
+  }
+  .blog-list .title {
+    font-weight: 600;
+  }
+  .blog-list .arrow {
+    color: var(--accent);
+    transition: transform 0.2s;
+  }
+  .blog-list a:hover .arrow {
+    transform: translateX(4px);
+  }
+  .all {
+    margin: 18px 0 0;
+    text-align: right;
+  }
+
+  @media (max-width: 860px) {
+    .featured {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .hero-body {
+      padding-inline: 12px;
+      gap: 16px;
+    }
+    .avatar {
+      width: 112px;
+      height: 112px;
+    }
+    .intro {
+      padding-top: 0;
+      flex-basis: 100%;
+    }
+    .hero-socials {
+      padding-inline: 12px;
+    }
+    .work {
+      grid-template-columns: 1fr;
+    }
+    .blog-list a {
+      grid-template-columns: 1fr auto;
+    }
+    .blog-list time {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

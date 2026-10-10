@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostIndex from '../../components/PostIndex.astro';
+import CategoryNav from '../../components/CategoryNav.astro';
+import { getPosts } from '../../lib/posts';
+
+const posts = await getPosts('articles');
+---
+
+<Base title="Articles" description="Long-form articles on mathematics, programming and beyond.">
+  <div class="container">
+    <h1 class="page-title"><span class="grad-text">Articles</span></h1>
+    <p class="page-intro">
+      Long-form writing in three categories: mathematics, programming, and essays beyond code. Every article is a Markdown
+      file on GitHub, so you can suggest edits.
+    </p>
+    <CategoryNav articles={posts} />
+    <PostIndex posts={posts} />
+  </div>
+</Base>

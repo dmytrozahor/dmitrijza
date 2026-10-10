@@ -1,0 +1,60 @@
+---
+import { categoryOf, formatDate, kindLabel, postUrl, readingTime, type Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  showKind?: boolean;
+}
+
+const { post, showKind = false } = Astro.props;
+const { title, description, date, tags } = post.data;
+const category = categoryOf(post);
+---
+
+<a class="card post-card" href={postUrl(post)}>
+  <p class="meta">
+    {showKind && !category && <span class="kind">{kindLabel[post.collection]}</span>}
+    {category && <span class="kind">{category.title}</span>}
+    <time datetime={date.toISOString()}>{formatDate(date)}</time> · {readingTime(post.body)} min read
+  </p>
+  <h3>{title}</h3>
+  <p class="desc">{description}</p>
+  {
+    tags.length > 0 && (
+      <ul class="tags">
+        {tags.slice(0, 4).map((t) => (
+          <li class="tag">{t}</li>
+        ))}
+      </ul>
+    )
+  }
+</a>
+
+<style>
+  .post-card {
+    padding: 22px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .meta {
+    margin: 0 0 10px;
+  }
+  .kind {
+    color: var(--accent);
+    margin-right: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  h3 {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    line-height: 1.3;
+  }
+  .desc {
+    margin: 0 0 16px;
+    color: var(--text-muted);
+    font-size: 0.97rem;
+    flex: 1;
+  }
+</style>

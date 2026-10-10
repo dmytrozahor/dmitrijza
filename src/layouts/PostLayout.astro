@@ -1,0 +1,235 @@
+and ---
+import { render } from 'astro:content';
+import Base from './Base.astro';
+import Icon from '../components/Icon.astro';
+import 'katex/dist/katex.min.css';
+import {
+  categoryOf,
+  categoryUrl,
+  discussUrl,
+  editUrl,
+  formatDate,
+  kindLabel,
+  postUrl,
+  readingTime,
+  slugifyTag,
+  url,
+  type Post,
+} from '../lib/posts';
+
+interface Props {
+  post: Post;
+  prev?: Post;
+  next?: Post;
+}
+
+const { post, prev, next } = Astro.props;
+const { title, description, date, updated, tags, cover } = post.data;
+const { Content, headings } = await render(post);
+const toc = headings.filter((h) => h.depth === 2);
+const indexHref = url(`/${post.collection}/`);
+const category = categoryOf(post);
+---
+
+<Base title={title} description={description} image={cover} type="article">
+  <article class="container post">
+    <header class="post-head">
+      <a href={indexHref} class="back meta">← all {post.collection}</a>
+      <p class="meta">
+        {
+          category ? (
+            <a class="kind" href={categoryUrl(category.key)}>
+              {category.title}
+            </a>
+          ) : (
+            <span class="kind">{kindLabel[post.collection]}</span>
+          )
+        }
+        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        {updated && <> · updated {formatDate(updated)}</>} · {readingTime(post.body)} min read
+      </p>
+      <h1>{title}</h1>
+      <p class="lead">{description}</p>
+      {
+        tags.length > 0 && (
+          <ul class="tags">
+            {tags.map((t) => (
+              <li>
+                <a class="tag" href={url(`/tags/${slugifyTag(t)}/`)}>
+                  #{t}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    {cover && <img class="cover" src={url(cover)} alt="" />}
+
+    <div class="layout">
+      <div class="prose">
+        <Content />
+      </div>
+      {
+        toc.length > 2 && (
+          <aside class="toc" aria-label="On this page">
+            <p class="meta">// on this page</p>
+            <ul>
+              {toc.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+    </div>
+
+    <div class="gh-actions card">
+      <p>
+        This {kindLabel[post.collection].toLowerCase()} lives on GitHub as plain Markdown. Spotted a typo or want to talk
+        about it?
+      </p>
+      <div class="btns">
+        <a class="btn" href={editUrl(post)}><Icon name="edit" size={16} /> Edit on GitHub</a>
+        <a class="btn btn-primary" href={discussUrl(post)}><Icon name="chat" size={16} /> Discuss on GitHub</a>
+      </div>
+    </div>
+
+    <nav class="pager" aria-label="More posts">
+      {
+        prev ? (
+          <a class="card" href={postUrl(prev)}>
+            <span class="meta">← older</span>
+            <span>{prev.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next && (
+          <a class="card right" href={postUrl(next)}>
+            <span class="meta">newer →</span>
+            <span>{next.data.title}</span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .post-head {
+    max-width: 760px;
+    margin: 48px 0 36px;
+  }
+  .back {
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .kind {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-right: 8px;
+  }
+  h1 {
+    font-size: clamp(2rem, 5vw, 2.9rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 10px 0 14px;
+  }
+  .lead {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin: 0 0 18px;
+  }
+  .cover {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    margin-bottom: 40px;
+    aspect-ratio: 21 / 9;
+    object-fit: cover;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 48px;
+  }
+  .toc {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+    font-size: 0.9rem;
+  }
+  .toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    border-left: 1px solid var(--border);
+  }
+  .toc li a {
+    display: block;
+    padding: 4px 0 4px 14px;
+    color: var(--text-muted);
+  }
+  .toc li a:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .gh-actions {
+    margin-top: 56px;
+    padding: 22px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .gh-actions p {
+    margin: 0;
+    color: var(--text-muted);
+    max-width: 50ch;
+  }
+  .btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .pager a {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-weight: 600;
+  }
+  .pager .right {
+    text-align: right;
+    grid-column: 2;
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .toc {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+    .pager .right {
+      grid-column: 1;
+    }
+  }
+</style>

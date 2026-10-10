@@ -1,0 +1,25 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PostIndex from '../../../components/PostIndex.astro';
+import CategoryNav from '../../../components/CategoryNav.astro';
+import { categories, categoryKeys } from '../../../site.config';
+import { getPosts } from '../../../lib/posts';
+
+export function getStaticPaths() {
+  return categoryKeys.map((category) => ({ params: { category }, props: { category } }));
+}
+
+const { category } = Astro.props;
+const { title, description } = categories[category];
+const all = await getPosts('articles');
+const posts = all.filter((p) => p.collection === 'articles' && p.data.category === category);
+---
+
+<Base title={`${title} · Articles`} description={description}>
+  <div class="container">
+    <h1 class="page-title"><span class="grad-text">{title}</span></h1>
+    <p class="page-intro">{description}</p>
+    <CategoryNav articles={all} active={category} />
+    <PostIndex posts={posts} />
+  </div>
+</Base>

@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../site.config';
+import { url } from '../lib/posts';
+---
+
+<ul class="socials">
+  {
+    site.socials.map((s) => (
+      <li>
+        <a href={url(s.href)} aria-label={s.label} title={s.label}>
+          <Icon name={s.icon} size={18} />
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .socials {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  a {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  a:hover {
+    color: #fff;
+    background: var(--grad);
+    border-color: transparent;
+  }
+</style>

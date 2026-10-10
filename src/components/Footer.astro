@@ -1,0 +1,52 @@
+---
+import Socials from './Socials.astro';
+import { site } from '../site.config';
+
+const repo = `https://github.com/${site.repo.owner}/${site.repo.name}`;
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <div>
+      <p class="name">{site.name}</p>
+      <p class="meta">
+        {site.role} @ <a href={site.company.url}>{site.company.name}</a> · {site.location}
+      </p>
+    </div>
+    <Socials />
+  </div>
+  <div class="container fine meta">
+    <span>© {new Date().getFullYear()} {site.name}</span>
+    <span>Source on <a href={repo}>GitHub</a></span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    margin-top: 96px;
+    padding-block: 36px 28px;
+    background: var(--bg-elev);
+  }
+  .inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .name {
+    font-weight: 700;
+    margin: 0;
+  }
+  .inner .meta {
+    margin: 4px 0 0;
+  }
+  .fine {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostIndex from '../../components/PostIndex.astro';
+import { getAllPosts, slugifyTag } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  const tags = new Map<string, string>();
+  for (const t of posts.flatMap((p) => p.data.tags)) tags.set(slugifyTag(t), t);
+  return [...tags].map(([slug, name]) => ({
+    params: { tag: slug },
+    props: { name, posts: posts.filter((p) => p.data.tags.some((t) => slugifyTag(t) === slug)) },
+  }));
+}
+
+const { name, posts } = Astro.props;
+---
+
+<Base title={`#${name}`} description={`Articles and blog posts tagged ${name}.`}>
+  <div class="container">
+    <h1 class="page-title"><span class="grad-text">#{name}</span></h1>
+    <p class="page-intro">{posts.length} {posts.length === 1 ? 'post' : 'posts'} tagged “{name}”.</p>
+    <PostIndex posts={posts} showKind />
+  </div>
+</Base>

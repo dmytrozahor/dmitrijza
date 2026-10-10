@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { site } from '../site.config';
+---
+
+<Base title="Projects" description="Projects by Dmytro Zahorodnii, including Fides.">
+  <div class="container">
+    <h1 class="page-title"><span class="grad-text">Projects</span></h1>
+    <p class="page-intro">
+      Things I build. Fides is my main project; the rest are open source, and issues and pull requests are very
+      welcome.
+    </p>
+    <div class="grid">
+      {site.projects.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </div>
+</Base>

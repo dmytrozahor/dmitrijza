@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostIndex from '../../components/PostIndex.astro';
+import { getPosts } from '../../lib/posts';
+
+const posts = await getPosts('blog');
+---
+
+<Base title="Blog" description="Shorter notes, learnings and updates.">
+  <div class="container">
+    <h1 class="page-title"><span class="grad-text">Blog</span></h1>
+    <p class="page-intro">Shorter notes: things I learned, project updates and what I'm working on.</p>
+    <PostIndex posts={posts} />
+  </div>
+</Base>

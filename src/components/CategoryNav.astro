@@ -1,0 +1,63 @@
+---
+import Icon from './Icon.astro';
+import { categories, categoryKeys, type Category } from '../site.config';
+import { categoryUrl, url, type Post } from '../lib/posts';
+
+interface Props {
+  articles: Post[];
+  active?: Category;
+}
+
+const { articles, active } = Astro.props;
+const count = (key: Category) => articles.filter((p) => p.collection === 'articles' && p.data.category === key).length;
+---
+
+<nav class="cat-nav" aria-label="Article categories">
+  <a href={url('/articles/')} aria-current={!active ? 'page' : undefined}>
+    All <span class="count">{articles.length}</span>
+  </a>
+  {
+    categoryKeys.map((key) => (
+      <a href={categoryUrl(key)} aria-current={active === key ? 'page' : undefined}>
+        <Icon name={categories[key].icon} size={16} />
+        {categories[key].title} <span class="count">{count(key)}</span>
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .cat-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  a:hover {
+    text-decoration: none;
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+  a[aria-current='page'] {
+    background: var(--grad);
+    border-color: transparent;
+    color: #fff;
+  }
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    opacity: 0.75;
+  }
+</style>

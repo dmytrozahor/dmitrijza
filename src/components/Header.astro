@@ -1,0 +1,158 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../site.config';
+import { url } from '../lib/posts';
+
+const links = [
+  { href: '/articles/', label: 'Articles' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/projects/', label: 'Projects' },
+  { href: '/about/', label: 'About' },
+];
+
+const current = Astro.url.pathname;
+const isActive = (href: string) => current.startsWith(url(href));
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a href={url('/')} class="logo" aria-label={`${site.name} — home`}>
+      <span class="logo-mark">dz</span>
+      <span class="logo-name">{site.name}</span>
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        {
+          links.map((l) => (
+            <li>
+              <a href={url(l.href)} aria-current={isActive(l.href) ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a href={`https://github.com/${site.handle}`} class="gh" aria-label="GitHub">
+            <Icon name="github" size={18} />
+          </a>
+        </li>
+        <li>
+          <button type="button" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+            <span class="icon-moon"><Icon name="moon" size={18} /></span>
+            <span class="icon-sun"><Icon name="sun" size={18} /></span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const root = document.documentElement;
+  document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+    const dark = root.dataset.theme !== 'dark';
+    if (dark) root.dataset.theme = 'dark';
+    else delete root.dataset.theme;
+    try {
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    } catch {}
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 64px;
+    flex-wrap: wrap;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-weight: 700;
+  }
+  .logo:hover {
+    text-decoration: none;
+  }
+  .logo-mark {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--grad);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+  nav ul {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  nav a {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-left: 4px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    color: var(--accent);
+    border-color: var(--border-strong);
+  }
+  .icon-sun,
+  :global([data-theme='dark']) .icon-moon {
+    display: none;
+  }
+  :global([data-theme='dark']) .icon-sun {
+    display: contents;
+  }
+  .icon-moon {
+    display: contents;
+  }
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--text);
+    background: var(--accent-soft);
+    text-decoration: none;
+  }
+  @media (max-width: 640px) {
+    .logo-name {
+      display: none;
+    }
+    nav a {
+      padding: 6px 9px;
+      font-size: 0.9rem;
+    }
+  }
+</style>
