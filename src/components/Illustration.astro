@@ -1,0 +1,12 @@
+---
+import { renderIllustration } from '../lib/illustrations.mjs';
+
+interface Props {
+  name: string;
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+---
+
+<div class:list={['ill', className]} set:html={renderIllustration(name)} />

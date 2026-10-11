@@ -18,6 +18,17 @@
   --banner: linear-gradient(135deg, #efe7ff 0%, #ddcbff 45%, #f5d0fe 100%);
   --banner-grid: rgba(124, 58, 237, 0.08);
   --code-bg: #faf7ff;
+  --ill-a: #7c3aed;
+  --ill-b: #06b6d4;
+  --ill-c: #d946ef;
+  --ill-ink: #2e1065;
+  --ill-plate: #ffffff;
+  --ill-plate-2: #f6f1ff;
+  --ill-plate-edge: #e2d6fb;
+  --ill-line: rgba(124, 58, 237, 0.32);
+  --ill-dot: rgba(124, 58, 237, 0.16);
+  --ill-bg: radial-gradient(120% 90% at 85% 10%, rgba(196, 181, 253, 0.35), transparent 60%),
+    radial-gradient(90% 80% at 10% 100%, rgba(165, 243, 252, 0.28), transparent 60%), #fdfcff;
   --radius: 14px;
   --radius-lg: 22px;
   --shadow: 0 12px 36px -18px rgba(109, 40, 217, 0.35);
@@ -48,6 +59,17 @@
     linear-gradient(135deg, #1b0b3f, #2b1170 55%, #4a1a8a);
   --banner-grid: rgba(255, 255, 255, 0.06);
   --code-bg: #282a36;
+  --ill-a: #a78bfa;
+  --ill-b: #22d3ee;
+  --ill-c: #f0abfc;
+  --ill-ink: #ede9fe;
+  --ill-plate: #221a3d;
+  --ill-plate-2: #1a1430;
+  --ill-plate-edge: #3a2e66;
+  --ill-line: rgba(167, 139, 250, 0.42);
+  --ill-dot: rgba(167, 139, 250, 0.2);
+  --ill-bg: radial-gradient(120% 90% at 85% 10%, rgba(124, 58, 237, 0.28), transparent 60%),
+    radial-gradient(90% 80% at 10% 100%, rgba(34, 211, 238, 0.12), transparent 60%), #151027;
   --shadow: 0 10px 40px -12px rgba(110, 40, 220, 0.45);
 }
 
@@ -509,4 +531,160 @@ a.tag:hover {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.2em 0;
+}
+
+/* ---------- Illustrations (see src/lib/illustrations.mjs) ---------- */
+.ill svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.ill .plate {
+  stroke: var(--ill-plate-edge);
+  stroke-width: 1;
+}
+
+.ill .edge {
+  fill: var(--ill-plate-edge);
+}
+
+.ill .trace {
+  fill: none;
+  stroke: var(--ill-line);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ill .thin {
+  stroke-width: 1.1;
+}
+
+.ill .dash {
+  stroke-dasharray: 4 5;
+}
+
+.ill .ring {
+  fill: none;
+  stroke: var(--ill-line);
+  stroke-width: 1.1;
+}
+
+.ill .ring.strong {
+  stroke-width: 1.6;
+}
+
+.ill .face {
+  fill: var(--ill-a);
+  opacity: 0.08;
+}
+
+.ill .flow {
+  fill: none;
+  stroke: var(--ill-plate);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-dasharray: 0.1 14;
+  animation: ill-flow 2.4s linear infinite;
+}
+
+.ill .na { fill: var(--ill-a); }
+.ill .nb { fill: var(--ill-b); }
+.ill .nc { fill: var(--ill-c); }
+.ill .ni { fill: var(--ill-ink); }
+.ill .nw { fill: var(--ill-plate); stroke: var(--ill-a); stroke-width: 1.6; }
+.ill .pt { fill: var(--ill-a); }
+.ill .ptb { fill: var(--ill-b); }
+.ill .ptc { fill: var(--ill-c); }
+.ill .fdot { fill: var(--ill-dot); }
+
+.ill .lane {
+  fill: var(--ill-dot);
+}
+
+.ill .tile {
+  fill: var(--ill-dot);
+  stroke: var(--ill-line);
+  stroke-width: 1;
+}
+
+.ill .tile.strong {
+  fill: none;
+  stroke: var(--ill-b);
+  stroke-width: 1.6;
+}
+
+.ill .rec-done { fill: var(--ill-a); opacity: 0.22; }
+.ill .rec-a { fill: var(--ill-a); }
+.ill .rec-b { fill: var(--ill-b); }
+.ill .rec-w { fill: var(--ill-plate); stroke: var(--ill-a); stroke-width: 1.2; }
+
+.ill .chip-t {
+  font: 600 20px var(--font-mono);
+  fill: var(--ill-a);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.ill .pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ill-pulse 5s ease-in-out infinite;
+}
+
+@keyframes ill-flow {
+  to {
+    stroke-dashoffset: -28.2;
+  }
+}
+
+@keyframes ill-pulse {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ill .flow,
+  .ill .pulse {
+    animation: none;
+  }
+}
+
+/* Illustration or image placed inside an article: <figure data-illustration="stream"> or ![alt](src "caption") */
+.prose figure {
+  margin: 2em 0;
+}
+
+.prose figure img {
+  margin: 0 auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.prose figure.ill-figure {
+  padding: 1.2em 1.2em 0.8em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--ill-bg);
+}
+
+.prose figure.ill-figure .ill {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.prose figcaption {
+  margin-top: 0.8em;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-faint);
 }

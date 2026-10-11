@@ -65,16 +65,25 @@ export type Project = (typeof site.projects)[number];
 // Rename `title` / `description` freely; changing a key also changes its URL (/articles/category/<key>/).
 export const categories = {
   mathematics: {
+    kicker: 'Field notes · 01',
+    subtitle: 'Proofs, structures & the maths behind the code',
+    illustration: 'math',
     title: 'Mathematics',
     description: 'Proofs, algorithms and the maths behind the code: number theory, linear algebra, probability.',
     icon: 'sigma',
   },
   programming: {
+    kicker: 'Field guide · 02',
+    subtitle: 'Full-stack Java, the JVM & distributed systems',
+    illustration: 'network',
     title: 'Programming',
     description: 'Full-stack Java: the JVM, Spring, concurrency, frontend, architecture and tooling.',
     icon: 'code',
   },
   personal: {
+    kicker: 'Essays · 03',
+    subtitle: 'Engineering practice, AI & the craft',
+    illustration: 'orbit',
     title: 'Beyond Code',
     description: 'Essays beyond code: engineering practice, AI, career and learning.',
     icon: 'spark',
