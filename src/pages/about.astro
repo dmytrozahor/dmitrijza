@@ -4,8 +4,6 @@ import Socials from '../components/Socials.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../site.config';
 import { url } from '../lib/posts';
-
-const fides = site.projects.find((p) => p.name === 'Fides');
 ---
 
 <Base title="About" description={`About ${site.name}, ${site.role} at ${site.company.name}.`}>
@@ -22,15 +20,6 @@ const fides = site.projects.find((p) => p.name === 'Fides');
         I work across the whole stack, from Java and Spring backends down to the JVM and up to the frontend. At
         {site.company.name}, one of Germany's largest energy companies, I build software where reliability matters. I also
         have a soft spot for mathematics, so expect some of it here.
-      </p>
-      <p>
-        Besides my work at {site.company.name}, I am building my own project,
-        {fides && <a href={fides.href}>Fides</a>}: a robust real property management and trading platform.
-      </p>
-      <p>
-        On this site I publish long-form <a href={url('/articles/')}>articles</a> and shorter
-        <a href={url('/blog/')}>blog posts</a>. Everything is written in Markdown and lives in a
-        <a href={`https://github.com/${site.repo.owner}/${site.repo.name}`}>public GitHub repository</a>.
       </p>
       <p class="loc meta"><Icon name="pin" size={16} /> {site.location}</p>
       <Socials />
