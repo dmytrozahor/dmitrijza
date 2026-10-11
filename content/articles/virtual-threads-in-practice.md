@@ -3,6 +3,7 @@ title: 'Virtual threads in practice: what changes for backend code'
 description: 'Java virtual threads make thread-per-request cheap again. Here is how to adopt them, what pinning is, and the habits you should drop.'
 date: 2026-10-05
 category: programming
+illustration: network
 tags: [java, concurrency, jvm]
 ---
 

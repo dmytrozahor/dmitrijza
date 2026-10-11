@@ -3,6 +3,7 @@ title: 'Writing the intent, not the code: AI and specification-driven developmen
 description: 'AI assistants are changing what a developer’s day consists of. Why adapting early matters, where the tools fail, and why the specification is becoming the most important artifact we write.'
 date: 2026-10-11
 category: personal
+illustration: orbit
 tags: [ai, software engineering, specification, career]
 ---
 

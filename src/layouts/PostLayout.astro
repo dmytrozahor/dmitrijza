@@ -1,7 +1,9 @@
 ---
 import { render } from 'astro:content';
 import Base from './Base.astro';
+import { Image } from 'astro:assets';
 import Icon from '../components/Icon.astro';
+import Illustration from '../components/Illustration.astro';
 import 'katex/dist/katex.min.css';
 import {
   categoryOf,
@@ -24,14 +26,15 @@ interface Props {
 }
 
 const { post, prev, next } = Astro.props;
-const { title, description, date, updated, tags, cover } = post.data;
+const { title, description, date, updated, tags, cover, coverAlt, illustration } = post.data;
+const ogImage = cover ? new URL(cover.src, Astro.site).href : undefined;
 const { Content, headings } = await render(post);
 const toc = headings.filter((h) => h.depth === 2);
 const indexHref = url(`/${post.collection}/`);
 const category = categoryOf(post);
 ---
 
-<Base title={title} description={description} image={cover} type="article">
+<Base title={title} description={description} image={ogImage} type="article">
   <article class="container post">
     <header class="post-head">
       <a href={indexHref} class="back meta">← all {post.collection}</a>
@@ -65,7 +68,17 @@ const category = categoryOf(post);
       }
     </header>
 
-    {cover && <img class="cover" src={url(cover)} alt="" />}
+    {
+      cover ? (
+        <Image class="cover" src={cover} alt={coverAlt} widths={[640, 1080, 1600]} sizes="(max-width: 1100px) 100vw, 1080px" loading="eager" fetchpriority="high" />
+      ) : (
+        illustration && (
+          <div class="cover cover-ill">
+            <Illustration name={illustration} />
+          </div>
+        )
+      )
+    }
 
     <div class="layout">
       <div class="prose">
@@ -189,12 +202,31 @@ const category = categoryOf(post);
     color: var(--text-muted);
     margin: 0 0 18px;
   }
-  .cover {
+  .post :global(.cover) {
+    display: block;
     width: 100%;
-    border-radius: var(--radius-lg);
-    margin-bottom: 40px;
+    height: auto;
+    margin-bottom: 44px;
     aspect-ratio: 21 / 9;
     object-fit: cover;
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .cover-ill {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: var(--ill-bg);
+  }
+  .cover-ill :global(.ill) {
+    height: 100%;
+    max-width: 100%;
+    aspect-ratio: 3 / 2;
+    padding-block: 2%;
+  }
+  .cover-ill :global(.ill svg) {
+    height: 100%;
   }
   .layout {
     display: grid;

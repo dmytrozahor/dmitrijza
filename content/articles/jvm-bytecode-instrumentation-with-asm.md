@@ -3,6 +3,7 @@ title: 'JVM bytecode instrumentation with ASM: timing every method without touch
 description: 'Build a tiny Java agent that rewrites classes at load time with ASM and records how long each method takes, and learn the pitfalls on the way.'
 date: 2026-09-14
 category: programming
+illustration: layers
 tags: [java, jvm, bytecode, asm]
 ---
 

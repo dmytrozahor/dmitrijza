@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import Illustration from './Illustration.astro';
 import { categoryOf, formatDate, kindLabel, postUrl, readingTime, type Post } from '../lib/posts';
 
 interface Props {
@@ -7,35 +9,81 @@ interface Props {
 }
 
 const { post, showKind = false } = Astro.props;
-const { title, description, date, tags } = post.data;
+const { title, description, date, tags, cover, illustration } = post.data;
 const category = categoryOf(post);
 ---
 
 <a class="card post-card" href={postUrl(post)}>
-  <p class="meta">
-    {showKind && !category && <span class="kind">{kindLabel[post.collection]}</span>}
-    {category && <span class="kind">{category.title}</span>}
-    <time datetime={date.toISOString()}>{formatDate(date)}</time> · {readingTime(post.body)} min read
-  </p>
-  <h3>{title}</h3>
-  <p class="desc">{description}</p>
   {
-    tags.length > 0 && (
-      <ul class="tags">
-        {tags.slice(0, 4).map((t) => (
-          <li class="tag">{t}</li>
-        ))}
-      </ul>
+    cover ? (
+      <Image class="thumb" src={cover} alt="" widths={[400, 800]} sizes="(max-width: 700px) 100vw, 360px" />
+    ) : (
+      illustration && (
+        <div class="thumb thumb-ill">
+          <Illustration name={illustration} />
+        </div>
+      )
     )
   }
+  <div class="body">
+    <p class="meta">
+      {showKind && !category && <span class="kind">{kindLabel[post.collection]}</span>}
+      {category && <span class="kind">{category.title}</span>}
+      <time datetime={date.toISOString()}>{formatDate(date)}</time> · {readingTime(post.body)} min read
+    </p>
+    <h3>{title}</h3>
+    <p class="desc">{description}</p>
+    {
+      tags.length > 0 && (
+        <ul class="tags">
+          {tags.slice(0, 4).map((t) => (
+            <li class="tag">{t}</li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
 </a>
 
 <style>
   .post-card {
-    padding: 22px 22px 20px;
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: hidden;
+  }
+  .post-card :global(.thumb) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border);
+  }
+  .thumb-ill {
+    display: grid;
+    place-items: center;
+    background: var(--ill-bg);
+    overflow: hidden;
+  }
+  .thumb-ill :global(.ill) {
+    height: 100%;
+    aspect-ratio: 3 / 2;
+    max-width: 100%;
+    padding-block: 3%;
+    transition: transform 0.35s ease;
+  }
+  .thumb-ill :global(.ill svg) {
+    height: 100%;
+  }
+  .post-card:hover .thumb-ill :global(.ill) {
+    transform: scale(1.04);
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px 22px 20px;
   }
   .meta {
     margin: 0 0 10px;

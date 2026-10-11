@@ -3,6 +3,7 @@ title: 'Backpressure in Project Reactor, explained with code'
 description: 'What request(n) really means, how prefetch and limitRate shape demand, and how to choose an overflow strategy when a producer is faster than its consumer.'
 date: 2026-09-28
 category: programming
+illustration: stream
 tags: [java, reactive, reactor]
 ---
 

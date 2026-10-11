@@ -3,6 +3,7 @@ title: 'Share consumers in Kafka: queues without giving up the log'
 description: 'Share groups (KIP-932) let many consumers read the same partition and acknowledge records one by one. How they work, how they differ from consumer groups, and how to use KafkaShareConsumer from Java.'
 date: 2026-10-11
 category: programming
+illustration: stream
 tags: [kafka, java, messaging, distributed systems]
 ---
 
@@ -56,6 +57,10 @@ partition can be delivered to any member of the group. Each record is delivered 
 time-limited **acquisition lock**, and its fate is decided by that consumer's **acknowledgement**.
 
 </div>
+
+<figure data-illustration="stream">
+<figcaption>One partition, many consumers: records are handed out one by one and acknowledged individually.</figcaption>
+</figure>
 
 The result behaves like a queue: add consumers and throughput goes up, regardless of how many partitions the topic has.
 And the topic is still an ordinary Kafka topic. Other applications can read it with normal consumer groups, replay it,

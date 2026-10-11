@@ -3,6 +3,7 @@ title: 'Principia Mathematica: hundreds of pages to reach 1 + 1 = 2'
 description: 'How Russell and Whitehead tried to build all of mathematics from pure logic, and what their attempt taught us about sets, numbers, types and the limits of proof.'
 date: 2026-10-11
 category: mathematics
+illustration: math
 tags: [logic, foundations, set theory, type theory, history]
 ---
 

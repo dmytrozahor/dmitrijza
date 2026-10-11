@@ -3,6 +3,7 @@ title: 'Fibonacci in O(log n): from matrices to fast doubling in Java'
 description: 'Why the naive Fibonacci is exponential, how a 2×2 matrix turns it logarithmic, and a fast-doubling BigInteger implementation that computes F(1 000 000) in a fraction of a second.'
 date: 2026-10-02
 category: mathematics
+illustration: math
 tags: [algorithms, linear algebra, java]
 ---
 
