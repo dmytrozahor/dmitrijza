@@ -36,6 +36,13 @@ export const site = {
       featured: true,
     },
     {
+      name: 'BULP',
+      href: 'https://github.com/dmytrozahor/BULP',
+      description: 'Evidence-based lexicon for exploring the history and regional variation of Ukrainian word forms.',
+      tags: ['Ukrainian', 'NLP', 'corpus'],
+      featured: false,
+    },
+    {
       name: 'UASound',
       href: 'https://github.com/dmytrozahor/UASound',
       description: 'Indexing Ukrainian music published across several Telegram channels.',
