@@ -43,13 +43,6 @@ export const site = {
       featured: false,
     },
     {
-      name: 'UASound',
-      href: 'https://github.com/dmytrozahor/UASound',
-      description: 'Indexing Ukrainian music published across several Telegram channels.',
-      tags: ['indexing', 'telegram'],
-      featured: false,
-    },
-    {
       name: 'jminima',
       href: 'https://github.com/dmytrozahor/jminima',
       description: 'Minimalistic declarative JVM instrumentation library on top of ASM.',
